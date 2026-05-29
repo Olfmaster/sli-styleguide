@@ -1,9 +1,11 @@
 "use client";
 import { useEffect, useRef } from "react";
 import { gsap } from "@/lib/gsap";
+import { usePreferences } from "./PreferencesProvider";
 
 export default function Hero() {
   const rootRef = useRef(null);
+  const { t } = usePreferences();
 
   useEffect(() => {
     const root = rootRef.current;
@@ -32,7 +34,7 @@ export default function Hero() {
     }, root);
 
     return () => ctx.revert();
-  }, []);
+  }, [t.hero.line1, t.hero.line2, t.hero.line3]);
 
   return (
     <section
@@ -45,39 +47,28 @@ export default function Hero() {
           <div>
             <p data-hero-eyebrow className="eyebrow mb-8 flex items-center gap-3">
               <span className="inline-block h-px w-10 bg-brand" aria-hidden="true" />
-              Brand Guidelines · 2026
+              {t.hero.eyebrow}
             </p>
             <h1 className="font-sans tracking-[-0.025em] text-[44px] leading-[1.02] sm:text-[64px] lg:text-[96px] xl:text-[112px] font-medium text-ink">
               <span className="block overflow-hidden pb-[0.08em]">
-                <span data-hero-line className="block">Für Beauty.</span>
+                <span data-hero-line className="block">{t.hero.line1}</span>
               </span>
               <span className="block overflow-hidden pb-[0.08em]">
-                <span data-hero-line className="block">Für Health.</span>
+                <span data-hero-line className="block">{t.hero.line2}</span>
               </span>
               <span className="block overflow-hidden pb-[0.08em]">
-                <span data-hero-line className="block text-brand">
-                  Für alle, die formulieren.
-                </span>
+                <span data-hero-line className="block text-brand">{t.hero.line3}</span>
               </span>
             </h1>
           </div>
 
           <div className="lg:pb-6">
-            <p
-              data-hero-lead
-              className="text-lg leading-relaxed text-ink-soft max-w-xl"
-            >
-              Dieses Brand-Book bündelt alle Bausteine der visuellen Identität
-              von SLI Chemicals — Logo, Farben, Typografie, Bildsprache und
-              Anwendungsbeispiele. Es richtet sich an alle, die unsere Marke in
-              digitalen und gedruckten Medien sichtbar machen.
+            <p data-hero-lead className="text-lg leading-relaxed text-ink-soft max-w-xl">
+              {t.hero.lead}
             </p>
-            <p
-              data-hero-meta
-              className="mt-6 text-base leading-relaxed text-ink-muted max-w-xl"
-            >
-              Stand: Mai 2026. Bei Fragen zur Anwendung wenden Sie sich bitte
-              an <a href="mailto:info@slichemicals.com" className="text-ink link-underline">info@slichemicals.com</a>.
+            <p data-hero-meta className="mt-6 text-base leading-relaxed text-ink-muted max-w-xl">
+              {t.hero.metaPre}
+              <a href="mailto:info@slichemicals.com" className="text-ink link-underline">info@slichemicals.com</a>.
             </p>
           </div>
         </div>

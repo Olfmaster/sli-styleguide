@@ -1,24 +1,36 @@
 @import "tailwindcss";
 
-@theme inline {
-  /* SLI Chemicals brand palette */
-  --color-brand: #006843;              /* SLI green — primary */
-  --color-brand-deep: #004a30;         /* deeper green for hover / contrast */
-  --color-brand-soft: #2e8c63;         /* mid green for accents */
-  --color-brand-tint: #d6e8df;         /* very soft green for surfaces */
+/* Light theme tokens (default) */
+@theme {
+  /* SLI Chemicals brand palette — invariant across themes */
+  --color-brand: #006843;
+  --color-brand-deep: #004a30;
+  --color-brand-soft: #2e8c63;
+  --color-brand-tint: #d6e8df;
   --color-brand-glow: rgba(0, 104, 67, 0.12);
 
-  /* Neutral system */
-  --color-paper: #f6f4ee;              /* off-white background */
-  --color-paper-soft: #efece3;         /* slightly darker surface */
-  --color-ink: #0f120f;                /* near-black text */
+  /* Neutrals — light mode defaults */
+  --color-paper: #f6f4ee;
+  --color-paper-soft: #efece3;
+  --color-ink: #0f120f;
   --color-ink-soft: #2b2e2b;
   --color-ink-muted: #6a6f68;
-  --color-line: #e2dfd6;               /* hairline divider */
+  --color-line: #e2dfd6;
 
-  /* Type families — Helvetica per brand guidance */
+  /* Type families */
   --font-sans: "Helvetica Neue", Helvetica, Arial, sans-serif;
   --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+}
+
+/* Dark theme overrides — same tokens, inverted values */
+[data-theme="dark"] {
+  --color-paper: #0d100e;
+  --color-paper-soft: #161a17;
+  --color-ink: #ece8db;
+  --color-ink-soft: #b8b6ac;
+  --color-ink-muted: #7a7d75;
+  --color-line: #262b27;
+  --color-brand-tint: #0e3324;
 }
 
 :root {
@@ -34,6 +46,7 @@ body {
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+  transition: background-color 240ms ease, color 240ms ease;
 }
 
 ::selection {
@@ -43,6 +56,7 @@ body {
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
+  body { transition: none; }
 }
 @media (prefers-reduced-motion: no-preference) {
   html { scroll-behavior: smooth; }
@@ -75,6 +89,11 @@ body {
     radial-gradient(circle at 30% 20%, rgba(0, 0, 0, 0.012) 0, transparent 50%),
     radial-gradient(circle at 80% 60%, rgba(0, 0, 0, 0.015) 0, transparent 50%);
 }
+[data-theme="dark"] .paper-grain {
+  background-image:
+    radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.02) 0, transparent 50%),
+    radial-gradient(circle at 80% 60%, rgba(255, 255, 255, 0.025) 0, transparent 50%);
+}
 
 /* Underline for inline links inside body copy */
 .link-underline {
@@ -87,3 +106,10 @@ body {
 .link-underline:hover {
   background-size: 100% 2px;
 }
+
+/* Logo inversion for dark mode — green logo becomes mint-tinted */
+[data-theme="dark"] .logo-light-only {
+  display: none;
+}
+.logo-dark-only { display: none; }
+[data-theme="dark"] .logo-dark-only { display: inline-block; }

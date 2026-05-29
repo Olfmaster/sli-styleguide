@@ -1,6 +1,7 @@
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { PreferencesProvider } from "@/components/PreferencesProvider";
 
 const SITE_URL = "https://styleguide.slichemicals.com";
 const TITLE = "SLI Chemicals — Brand Guidelines";
@@ -46,25 +47,45 @@ export const metadata = {
 
 export const viewport = {
   themeColor: "#006843",
-  colorScheme: "light",
+  colorScheme: "light dark",
   width: "device-width",
   initialScale: 1,
 };
 
+// FOUC-free init: applies stored theme + locale before React hydrates.
+const PREF_INIT = `
+(function(){try{
+  var t = localStorage.getItem('sli-theme');
+  var l = localStorage.getItem('sli-locale');
+  if (t === 'dark' || t === 'light') document.documentElement.dataset.theme = t;
+  if (l === 'en' || l === 'de') document.documentElement.lang = l;
+}catch(_){}}())`;
+
 export default function RootLayout({ children }) {
   return (
-    <html lang="de" className="h-full">
-      <body className="min-h-full antialiased bg-paper text-ink">
-        <a
-          href="#main"
-          className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[100] focus:px-4 focus:py-2 focus:rounded-full focus:bg-brand focus:text-white focus:text-sm focus:shadow-lg"
-        >
-          Zum Inhalt springen
-        </a>
-        <Navbar />
-        <main id="main">{children}</main>
-        <Footer />
+    <html lang="de" data-theme="light" className="h-full" suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: PREF_INIT }} />
+      </head>
+      <body className="min-h-full antialiased" suppressHydrationWarning>
+        <PreferencesProvider>
+          <SkipLink />
+          <Navbar />
+          <main id="main">{children}</main>
+          <Footer />
+        </PreferencesProvider>
       </body>
     </html>
+  );
+}
+
+function SkipLink() {
+  return (
+    <a
+      href="#main"
+      className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[100] focus:px-4 focus:py-2 focus:rounded-full focus:bg-brand focus:text-white focus:text-sm focus:shadow-lg"
+    >
+      Zum Inhalt springen · Skip to content
+    </a>
   );
 }
